@@ -12,6 +12,7 @@ import { addToCart } from "../redux/actions/cart";
 import { openModal } from "../redux/actions/modal"
 import { DTProduct } from "../assets/DataTypes/DTProduct"
 import { EnumAction } from "../assets/DataTypes/EnumAction"
+import { Link } from "react-router-dom"
 
 const PickUp = () => {
   const dispatch = useDispatch()
@@ -38,7 +39,7 @@ const PickUp = () => {
         ))}
       </div>
       <div style={{ position: 'fixed', bottom: '10px', width: '100%', }} className="flex justify-end mt-4 px-5">
-        <Button variant='contained' color="error">Ver mi pedido</Button>
+        <Link to='/mis-pedidos'><Button variant='contained' color="error">Ver mi pedido</Button></Link>
       </div>
       {/* <Modal open={modal} closeModal={closeModal} product={product} addToCart={addToCart2} /> */}
     </div>

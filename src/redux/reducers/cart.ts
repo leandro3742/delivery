@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from 'notistack';
 import { Reducer } from 'redux';
 import { DTCart } from '../../assets/DataTypes/DTCart';
 import { ADD_TO_CART, CartActions, REMOVE_FROM_CART, SET_CANT_CART, UPDATE_CART } from '../actions/cart'
@@ -10,7 +11,7 @@ export const CartReducer: Reducer<Array<DTCart>, CartActions> = (
 ) => {
   switch (action.type) {
     case ADD_TO_CART:
-      console.log(action.payload)
+      enqueueSnackbar('Producto agregado al carrito', { variant: 'success' })
       return [...state, action.payload];
 
     case SET_CANT_CART:

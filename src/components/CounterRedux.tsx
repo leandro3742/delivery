@@ -25,7 +25,7 @@ function CounterRedux(props: props) {
     if (item) {
       setCant(item.cant)
     }
-  }, [_id])
+  }, [_id, cart])
 
   useEffect(() => {
     dispatch(setCantCart({ _id, cant }))

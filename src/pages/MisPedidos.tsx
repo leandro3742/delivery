@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import CounterRedux from '../components/CounterRedux'
 import { openModal } from '../redux/actions/modal';
 import { EnumAction } from '../assets/DataTypes/EnumAction';
+import { Button } from '@mui/material';
 
 interface props {
   elem: DTCart,
@@ -16,7 +17,7 @@ interface props {
 const EditCart = (props: props) => {
   const { elem, action } = props
   const dispatch = useDispatch()
-
+  console.log("text", elem)
   if (elem.product)
     return (
       <div className="text-red-600 bg-white py-5 px-3 my-3 flex shadow-lg rounded-xl" onClick={() => action(elem.product ? elem.product.category : '')}>
@@ -46,9 +47,7 @@ const EditCart = (props: props) => {
 
 const MisPedidos = () => {
   const cart = useSelector((state: AppState) => state.cart)
-  const dispatch = useDispatch()
   const action = (id: string) => console.log(id)
-  console.log(cart)
   return (
     <div className='flex flex-col w-100'>
       <div className=' text-center'>
@@ -56,6 +55,7 @@ const MisPedidos = () => {
       </div>
       <div className='mx-4'>
         {cart.map((item: DTCart, index: number) => {
+          console.log("CARRT", item)
           if (item.product)
             return (
               <EditCart elem={item} key={index} action={action} />
@@ -63,6 +63,9 @@ const MisPedidos = () => {
         })}
       </div>
       {/* {cart. */}
+      <div className='flex justify-end m-3'>
+        <Button variant='contained' size='small' color='error'>Finalizar compra</Button>
+      </div>
     </div>
   )
 }
