@@ -1,0 +1,5 @@
+.tags{
+  width: 100%;
+  height: 75px;
+  overflow-x: scroll;
+}
