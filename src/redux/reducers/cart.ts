@@ -1,7 +1,7 @@
 import { enqueueSnackbar } from 'notistack';
 import { Reducer } from 'redux';
 import { DTCart } from '../../assets/DataTypes/DTCart';
-import { ADD_TO_CART, CartActions, REMOVE_FROM_CART, SET_CANT_CART, UPDATE_CART } from '../actions/cart'
+import { ADD_TO_CART, CartActions, CLEAN_CART, REMOVE_FROM_CART, SET_CANT_CART, UPDATE_CART } from '../actions/cart'
 
 const initialState: Array<DTCart> = []
 
@@ -30,6 +30,9 @@ export const CartReducer: Reducer<Array<DTCart>, CartActions> = (
         return item;
       });
 
+    case CLEAN_CART:
+      enqueueSnackbar('Su pedido se ha realizado con éxito', { variant: 'success' })
+      return [];
     default:
       return state;
   }

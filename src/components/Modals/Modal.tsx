@@ -1,17 +1,17 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup, Paper } from "@mui/material";
-import { DTProduct } from "../assets/DataTypes/DTProduct";
+import { DTProduct } from "../../assets/DataTypes/DTProduct";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
-import Counter from "./Counter";
+import Counter from "../Counter";
 import React, { ReactNode, useEffect, useState } from "react";
-import { DTCart } from "../assets/DataTypes/DTCart";
-import { DTExtraIngredients } from "../assets/DataTypes/DTExtraIngredients";
+import { convertToCart, DTCart } from "../../assets/DataTypes/DTCart";
+import { DTExtraIngredients } from "../../assets/DataTypes/DTExtraIngredients";
 import { useSelector } from "react-redux";
-import { AppState } from "../redux/reducers";
+import { AppState } from "../../redux/reducers";
 import { useDispatch } from "react-redux";
-import { closeModal } from "../redux/actions/modal";
-import { addToCart, updateCart } from "../redux/actions/cart";
-import { EnumAction } from "../assets/DataTypes/EnumAction";
+import { closeModal } from "../../redux/actions/modal";
+import { addToCart, updateCart } from "../../redux/actions/cart";
+import { EnumAction } from "../../assets/DataTypes/EnumAction";
 
 interface props {
   open: boolean,
@@ -24,14 +24,12 @@ interface props {
 export default function Modal() {
   const stateModal = useSelector((state: AppState) => state.modal)
   const cart = useSelector((state: AppState) => state.cart)
-
   const dispatch = useDispatch()
-
-  // const { open, product, closeModal, addToCart } = props
   const [extras, setExtras] = useState<Array<DTExtraIngredients>>([])
   const [remove, setRemove] = useState<Array<string>>([])
   const [total, setTotal] = useState<number>(0)
   const [cant, setCant] = useState<number>(1)
+  const [product, setProduct] = useState<DTCart>()
 
   const addExtra = (elem: DTExtraIngredients): void => {
     let aux = extras.find((extra) => extra.name === elem.name)
@@ -52,7 +50,7 @@ export default function Modal() {
   }
 
   function getTotal(): void {
-    let total = stateModal.data?.product?.price || 0
+    let total = product?.product?.price || 0
     total *= cant
     extras.forEach((extra) => {
       total += extra.price * cant
@@ -66,16 +64,21 @@ export default function Modal() {
 
   useEffect(() => {
     if (stateModal.data) {
-      setExtras(stateModal.data.extras)
-      setRemove(stateModal.data.remove)
-      setCant(stateModal.data.cant)
-      setTotal(stateModal.data.total)
+      setProduct(convertToCart(stateModal.data))
     }
   }, [stateModal])
 
+  useEffect(() => {
+    if (product) {
+      setExtras(product.extras)
+      setRemove(product.remove)
+      setCant(product.cant)
+      setTotal(product.total)
+    }
+  }, [product])
   const saveCart = () => {
     if (stateModal.action === EnumAction.CREATE) {
-      dispatch(addToCart({ product: stateModal.data?.product, extras: extras, remove: remove, cant: cant, total: total }))
+      dispatch(addToCart({ product: product?.product, extras: extras, remove: remove, cant: cant, total: total }))
     }
     else if (stateModal.action === EnumAction.UPDATE) {
       let aux = -1
@@ -84,7 +87,7 @@ export default function Modal() {
           aux = index
       })
       if (aux != -1) {
-        dispatch(updateCart({ index: aux, data: { product: stateModal.data?.product, extras: extras, remove: remove, cant: cant, total: total } }))
+        dispatch(updateCart({ index: aux, data: { product: product?.product, extras: extras, remove: remove, cant: cant, total: total } }))
       }
     }
     dispatch(closeModal({ show: false, data: null, action: null }))
@@ -101,7 +104,7 @@ export default function Modal() {
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
               <h3 className="text-3xl font-semibold text-center">
-                {stateModal.data?.product?.name}
+                {product?.product?.name}
               </h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -125,7 +128,7 @@ export default function Modal() {
                 <AccordionDetails>
 
                   {
-                    stateModal.data?.product?.extras.map((extra, index) => {
+                    product?.product?.extras.map((extra, index) => {
                       return (
                         <div className='flex items-center' key={extra.name}>
                           <Checkbox checked={extras.find((elem) => elem.name === extra.name) ? true : false} onChange={() => addExtra(extra)} name="gilad" />
@@ -148,7 +151,7 @@ export default function Modal() {
                   <h5 className="text-2xl">Quitar ingredientes</h5>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {stateModal.data?.product?.ingredients.map((ingredient, index) => {
+                  {product?.product?.ingredients.map((ingredient, index) => {
                     return (
                       <div className='flex items-center' key={ingredient}>
                         <Checkbox checked={remove.find(elem => elem === ingredient) ? true : false} onChange={() => addRemove(ingredient)} name="gilad" />

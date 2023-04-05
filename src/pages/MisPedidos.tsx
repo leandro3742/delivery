@@ -8,7 +8,7 @@ import CounterRedux from '../components/CounterRedux'
 import { openModal } from '../redux/actions/modal';
 import { EnumAction } from '../assets/DataTypes/EnumAction';
 import { Button } from '@mui/material';
-
+import { saveSale } from '../api/cart';
 interface props {
   elem: DTCart,
   action: (id: string) => void
@@ -48,6 +48,12 @@ const EditCart = (props: props) => {
 const MisPedidos = () => {
   const cart = useSelector((state: AppState) => state.cart)
   const action = (id: string) => console.log(id)
+  const dispatch = useDispatch()
+
+  const saveSale2 = () => {
+    saveSale(cart)
+  }
+
   return (
     <div className='flex flex-col w-100'>
       <div className=' text-center'>
@@ -62,9 +68,8 @@ const MisPedidos = () => {
             )
         })}
       </div>
-      {/* {cart. */}
       <div className='flex justify-end m-3'>
-        <Button variant='contained' size='small' color='error'>Finalizar compra</Button>
+        <Button variant='contained' size='small' color='error' onClick={() => dispatch(openModal({ show: true, data: cart, action: EnumAction.CLIENT_INFO }))}>Finalizar compra</Button>
       </div>
     </div>
   )

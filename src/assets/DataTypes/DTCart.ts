@@ -8,3 +8,13 @@ export interface DTCart {
   cant: number,
   total: number
 }
+
+export function convertToCart(data: any): DTCart {
+  return {
+    product: data.product,
+    extras: data.extras,
+    remove: data.remove,
+    cant: data.cant,
+    total: data.total,
+  }
+}
