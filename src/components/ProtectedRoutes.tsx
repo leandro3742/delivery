@@ -1,11 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom"
 
-const ProtectedRoutes = (props: { user: string }) => {
-  const { user } = props
-
-  if (user === undefined || user === '') {
+const ProtectedRoutes = () => {
+  const token = localStorage.getItem('token')
+  if (!token) {
     return (
-      <Navigate to='login' />
+      <Navigate to='iniciar-sesion' />
     )
   }
 

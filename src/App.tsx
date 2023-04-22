@@ -14,7 +14,8 @@ import store from './redux/store'
 import MisPedidos from './pages/MisPedidos'
 import Admin from './pages/Admin'
 import ProtectedRoutes from './components/ProtectedRoutes'
-import Login from './pages/Login'
+import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
 
 function App() {
   const [isLogged, setIsLogged] = useState(true)
@@ -25,8 +26,9 @@ function App() {
           <Provider store={store}>
             <Layout isLogged={isLogged}>
               <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<ProtectedRoutes user='' />}>
+                <Route path='/iniciar-sesion' element={<SignIn />} />
+                <Route path='/registrarse' element={<SignUp />} />
+                <Route path="/" element={<ProtectedRoutes />}>
                   <Route path="/pick-up" element={<PickUp />} />
                   <Route path="/mis-pedidos" element={<MisPedidos />} />
                   <Route path="/admin" element={<Admin />} />

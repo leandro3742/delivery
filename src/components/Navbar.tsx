@@ -20,6 +20,7 @@ const Navbar = () => {
           <li><Link to="/mis-pedidos">Mis pedidos</Link></li>
           <li><Link to="/restaurantes">Restaurantes</Link></li>
           <li><Link to="/mi-perfil">Mi perfil</Link></li>
+          {localStorage.getItem('token') && <li><Link to='/iniciar-sesion' onClick={() => localStorage.removeItem('token')}>Cerrar sesion</Link></li>}
         </ul>
 
         <h1 className="logo">RS</h1>
