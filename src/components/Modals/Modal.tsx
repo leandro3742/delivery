@@ -78,7 +78,9 @@ export default function Modal() {
   }, [product])
   const saveCart = () => {
     if (stateModal.action === EnumAction.CREATE) {
-      dispatch(addToCart({ product: product?.product, extras: extras, remove: remove, cant: cant, total: total }))
+      dispatch(addToCart({
+        product: product?.product, extras: extras, remove: remove, cant: cant, total: total
+      }))
     }
     else if (stateModal.action === EnumAction.UPDATE) {
       let aux = -1

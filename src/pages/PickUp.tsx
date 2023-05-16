@@ -4,7 +4,6 @@ import Card from "../components/Card"
 import Modal from "../components/Modals/Modal"
 import { DTCart } from "../assets/DataTypes/DTCart"
 import { Autocomplete, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
-import { business } from "../mock/business"
 // Redux
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/actions/cart";

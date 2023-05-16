@@ -9,4 +9,5 @@ export interface DTProduct {
   category: string,
   ingredients: Array<string>,
   extras: Array<{ name: string, price: number }>,
+  business: string,
 }

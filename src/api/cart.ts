@@ -4,29 +4,27 @@ import { DTProduct } from "../assets/DataTypes/DTProduct"
 
 interface props {
   cart: Array<DTCart>,
-  client: {
-    name: string,
-    lastName: string,
-    phone: string,
-  }
 }
 
 export async function saveSale(props: props): Promise<{ message: String, status: number }> {
-
-  let raw = {
-    data: {
-      cart: props.cart,
-      client: props.client,
+  try {
+    const response = await fetch(`${BACK_URL}/order/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        data: props.cart
+      }),
+    })
+    return response.json()
+  } catch (e: any) {
+    if (e.statusCode === 401) {
+      sessionStorage.removeItem('token')
+      window.location.href = '/signin'
     }
+    console.log(e)
+    return { message: "Error", status: 500 }
   }
-
-  const response = await fetch(`${BACK_URL}/order/create`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(raw),
-  })
-  console.log(response)
-  return response.json()
 }

@@ -47,7 +47,7 @@ export default function SignIn() {
           console.log('Login successful');
           enqueueSnackbar(response.message, { variant: 'success' })
           console.log(response.token)
-          localStorage.setItem('token', response.token);
+          sessionStorage.setItem('token', response.token);
           navigate('/')
         }
         else {

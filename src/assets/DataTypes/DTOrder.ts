@@ -1,12 +1,13 @@
 import { DTCart } from "./DTCart";
 import { OrderType } from "./OrderType";
+import { StatusType } from "./StatusType";
+import { UserDto } from "./UserDto";
 
 export interface DTOrder {
-  client: string
-  business: string
-  address: string
-  phone: string
-  email: string
-  type: OrderType
-  cart: DTCart
+  _id?: string;
+  client: UserDto;
+  business: UserDto;
+  type: OrderType;
+  cart: Array<DTCart>;
+  status: StatusType;
 }

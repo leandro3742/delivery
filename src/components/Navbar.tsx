@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/navbar.css'
 
 const Navbar = () => {
+  const [isLogged, setIsLogged] = React.useState(true)
+
+  useEffect(() => {
+    if (isLogged === false) {
+      sessionStorage.removeItem('token')
+    }
+    else if (sessionStorage.getItem('token')) {
+      setIsLogged(true)
+    }
+  }, [isLogged])
   return (
     <nav className="navbar bg-red-200">
       <div className="navbar-container container">
@@ -20,7 +30,7 @@ const Navbar = () => {
           <li><Link to="/mis-pedidos">Mis pedidos</Link></li>
           <li><Link to="/restaurantes">Restaurantes</Link></li>
           <li><Link to="/mi-perfil">Mi perfil</Link></li>
-          {localStorage.getItem('token') && <li><Link to='/iniciar-sesion' onClick={() => localStorage.removeItem('token')}>Cerrar sesion</Link></li>}
+          <li><Link to='/iniciar-sesion' onClick={() => sessionStorage.removeItem('token')}>Cerrar sesion</Link></li>
         </ul>
 
         <h1 className="logo">RS</h1>

@@ -17,7 +17,6 @@ function CounterRedux(props: props) {
   let { _id } = props
   const cart = useSelector((state: AppState) => state.cart)
   const dispatch = useDispatch()
-
   const [cant, setCant] = useState<number>(1)
 
   useEffect(() => {

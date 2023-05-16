@@ -13,6 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkRouter } from 'react-router-dom';
+import { register } from '../api/auth';
+import { UserDto } from '../assets/DataTypes/UserDto';
+import { useDispatch } from 'react-redux';
+import { closeSpinner, openSpinner } from '../redux/actions/spinner';
+import { enqueueSnackbar } from 'notistack';
 
 function Copyright(props: any) {
   return (
@@ -30,13 +35,22 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const dispatch = useDispatch()
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    let user = {
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+      lastName: data.get('lastName') as string,
+      name: data.get('firstName') as string,
+    }
+    dispatch(openSpinner())
+    register(user)
+      .then(response => enqueueSnackbar('Usuario registrado', { variant: 'success' }))
+      .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
+      .finally(() => dispatch(closeSpinner()))
   };
 
   return (
