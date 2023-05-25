@@ -14,9 +14,9 @@ import { closeSpinner, openSpinner } from '../redux/actions/spinner';
 import { enqueueSnackbar } from 'notistack';
 import { getMyOrders } from '../api/order';
 import { DTOrder } from '../assets/DataTypes/DTOrder';
-import { COLORS } from '../assets/Colors';
 import { io } from 'socket.io-client';
 import { BACK_URL } from '../api';
+import PostIt from '../components/PostIt';
 
 interface props {
   elem: DTCart,
@@ -59,6 +59,7 @@ const MisPedidos = () => {
   const action = (id: string) => console.log(id)
   const dispatch = useDispatch();
   const [orders, setOrders] = useState<Array<DTOrder>>([])
+  const [typeOrders, setTypeOrders] = useState<string>('active')
 
   const buy = async () => {
     dispatch(openSpinner())
@@ -67,6 +68,7 @@ const MisPedidos = () => {
       .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
       .finally(() => dispatch(closeSpinner()))
   }
+
   useEffect(() => {
     const socket = io(BACK_URL, {
       transports: ['websocket'],
@@ -84,33 +86,42 @@ const MisPedidos = () => {
     });
 
     socket.on('message', (message) => {
-
-      console.log('mensage', message)
-      if (typeof message !== 'string') {
-        setOrders([...orders, message])
+      dispatch(openSpinner())
+      if (typeOrders === 'active') {
+        getMyOrders('active')
+          .then(response => setOrders(response))
+          .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
+          .finally(() => dispatch(closeSpinner()))
       }
-      console.log('Mensaje recibido:', message);
+      else if (typeOrders === 'history') {
+        getMyOrders('history')
+          .then(response => setOrders(response))
+          .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
+          .finally(() => dispatch(closeSpinner()))
+      }
     });
-
-    getMyOrders()
-      .then(response => setOrders(response))
-      .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
 
     return () => {
       socket.disconnect();
     }
   }, []);
 
-
-  // console.log(orders);
-  const getTotal = (cart: Array<DTCart>) => {
-    let total = 0
-    cart.forEach((item) => {
-      if (item.product)
-        total += item.total
-    })
-    return total
-  }
+  useEffect(() => {
+    if (typeOrders === 'active') {
+      dispatch(openSpinner())
+      getMyOrders('active')
+        .then(response => setOrders(response))
+        .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
+        .finally(() => dispatch(closeSpinner()))
+    }
+    else if (typeOrders === 'history') {
+      dispatch(openSpinner())
+      getMyOrders('history')
+        .then(response => setOrders(response))
+        .catch(error => enqueueSnackbar('Error de conexión', { variant: 'error' }))
+        .finally(() => dispatch(closeSpinner()))
+    }
+  }, [typeOrders])
 
   return (
     <div className='flex flex-col w-100'>
@@ -133,46 +144,22 @@ const MisPedidos = () => {
         </>
       }
       <div className='text-center'>
-        <h3 className='text-3xl font-semibold mt-2 text-red-600'>Estado de mis ordenes</h3>
-        <div className='flex flex-wrap justify-around'>
-          {orders.map((order) => (
-            <Paper key={order._id} sx={{ backgroundColor: COLORS[order.status] }} className='text-start p-3 my-2 mx-0 w-5/12'>
-              <span className='text-xl'><b>Restaurante:</b> {order.business.name}</span>
-              <div className=''>
-                {order.cart.map((item) => (
-                  <div key={item._id} className='mt-3 flex flex-col items-start'>
-                    <span className='text-xl'><b>Producto:</b> {item.product?.name}</span>
-                    <span className='text-xl'><b>Cantidad: </b> {item.cant}</span>
-                    <div className='flex'>
-                      <span className='text-xl'><b>Extras: </b></span>
-                      {item.extras.length === 0 && <span className='mx-1'>----</span>}
-                      {item.extras.map((extra) => (
-                        <span className='mx-1 text-xl' key={extra.name}>{extra.name}</span>
-                      ))}
-                    </div>
-                    <div className='flex flex-wrap'>
-                      <span className='text-xl'> <b>Quitar: </b> </span>
-                      {item.remove.length === 0 && <span className='mx-1'>----</span>}
-                      <div>
-                        {item.remove.map((remove) => (
-                          <span className='text-xl' key={remove}>{remove},</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className='mt-3'>
-                <span className='text-xl'><b>Estado del pedido:</b> {order.status}</span>
-              </div>
-              <div className='flex justify-end'>
-                <span className='text-xl'><b>Precio:${getTotal(order.cart)} </b> </span>
-              </div>
-            </Paper>
+        <div className="flex flex-col sm:flex-row justify-end mt-2 p-2">
+          {typeOrders === 'active'
+            ? <button className='bg-red-600 text-white rounded-xl px-4 py-2' onClick={() => setTypeOrders('history')}>Mostrar historial</button>
+            : <button className='bg-red-600 text-white rounded-xl px-4 py-2' onClick={() => setTypeOrders('active')}>Mostrar Ordenes activas</button>
+          }
+        </div>
+        <h3 className='text-3xl font-semibold mt-2 text-red-600'>
+          {typeOrders === 'active' ? 'Ordenes activas' : 'Historial'}
+        </h3>
+        <div className='flex flex-wrap justify-around mt-5'>
+          {orders.map((order, index) => (
+            <PostIt index={index} key={order._id} order={order} />
           ))}
         </div>
       </div>
-    </div>
+    </div >
 
   )
 }

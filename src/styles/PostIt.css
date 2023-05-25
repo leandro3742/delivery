@@ -1,0 +1,25 @@
+.postIt-container{
+  color: rgb(0, 0, 0);
+  margin: 15px;
+  background-color: rgb(255, 255, 204);
+  padding: 15px;
+  box-shadow: 5px 5px 5px #444343;
+  border-radius: 10px;
+  transform: rotate(-5deg);
+  transition: transform 0.5s ease-in-out;
+}
+
+.postIt-container:hover {
+  transform: rotate(0deg);
+  transform: scale(1.1);
+  transition: transform 0.5s ease-in-out;
+}
+.isEven {
+  transform: rotate(5deg);
+}
+
+@media screen and (max-width: 768px) {
+  .isEven {
+    transform: rotate(1deg);
+  }
+}

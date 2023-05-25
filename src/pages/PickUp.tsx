@@ -46,7 +46,6 @@ const PickUp = () => {
         {products.map((product) => (
           <div key={product._id}>
             <Card product={product} action={addProduct} />
-            <hr />
           </div>
         ))}
       </div>

@@ -17,29 +17,42 @@ import ProtectedRoutes from './components/ProtectedRoutes'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import WebSocketClient from './pages/Websocket'
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
+
   return (
     <div className="App">
       <SnackbarProvider maxSnack={3}>
-        <BrowserRouter>
-          <Provider store={store}>
-            <Layout>
-              <Routes>
-                <Route path='/iniciar-sesion' element={<SignIn />} />
-                <Route path='/registrarse' element={<SignUp />} />
-                <Route path="/" element={<ProtectedRoutes />}>
-                  <Route path="/pick-up" element={<PickUp />} />
-                  <Route path="/mis-pedidos" element={<MisPedidos />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path='/websocket' element={<WebSocketClient />} />
-                </Route>
-              </Routes>
-            </Layout>
-          </Provider>
-        </BrowserRouter>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+
+          <BrowserRouter>
+            <Provider store={store}>
+              <Layout>
+                <Routes>
+                  <Route path='/iniciar-sesion' element={<SignIn />} />
+                  <Route path='/registrarse' element={<SignUp />} />
+                  <Route path="/" element={<ProtectedRoutes />}>
+                    <Route path="/pick-up" element={<PickUp />} />
+                    <Route path="/mis-pedidos" element={<MisPedidos />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path='/websocket' element={<WebSocketClient />} />
+                  </Route>
+                </Routes>
+              </Layout>
+            </Provider>
+          </BrowserRouter>
+        </ThemeProvider>
       </SnackbarProvider>
-    </div>
+
+    </div >
   )
 }
 

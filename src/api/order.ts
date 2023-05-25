@@ -1,9 +1,13 @@
 import { BACK_URL } from ".";
 import { DTOrder } from "../assets/DataTypes/DTOrder";
 
-export async function getMyOrders(): Promise<Array<DTOrder>> {
+export async function getMyOrders(type: string): Promise<Array<DTOrder>> {
   try {
-    const response = await fetch(`${BACK_URL}/order/get`, {
+    let url = ''
+    if (type === 'active') url = `${BACK_URL}/order/get`
+    else if (type === 'history') url = `${BACK_URL}/order/record`
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

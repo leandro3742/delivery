@@ -14,7 +14,7 @@ const Navbar = () => {
     }
   }, [isLogged])
   return (
-    <nav className="navbar bg-red-200">
+    <nav className="navbar">
       <div className="navbar-container container">
         <input type="checkbox" name="" id="" />
         <div className="hamburger-lines">
